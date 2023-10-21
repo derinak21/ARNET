@@ -2,7 +2,8 @@
 Animal Recognition Network
 
 This is a project for IBM Z Datathon.
-[Link to our presentation](https://github.com/derinak21/ARNET/Presentation.pdf)
+
+[Link to our presentation](Presentation.pdf)
 
 # Team: Enemy of Syntax
 Derin Ak
