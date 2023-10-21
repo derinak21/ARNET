@@ -1,0 +1,35 @@
+- n01873310 platypus, duckbill, duckbilled platypus, duck-billed platypus, Ornithorhynchus anatinus
+- n01877812 wallaby, brush kangaroo
+- n01883070 wombat
+- n02085620 Chihuahua
+- n02085782 Japanese spaniel
+- n02085936 Maltese dog, Maltese terrier, Maltese
+- n02086079 Pekinese, Pekingese, Peke
+- n02086240 Shih-Tzu
+- n02086646 Blenheim spaniel
+- n02086910 papillon
+- n02087046 toy terrier
+- n02087394 Rhodesian ridgeback
+- n02088094 Afghan hound, Afghan
+- n02088238 basset, basset hound
+- n02088364 beagle
+- n02088466 bloodhound, sleuthhound
+- n02088632 bluetick
+- n02089078 black-and-tan coonhound
+- n02089867 Walker hound, Walker foxhound
+- n02089973 English foxhound
+- n02090379 redbone
+- n02090622 borzoi, Russian wolfhound
+- n02090721 Irish wolfhound
+- n02091032 Italian greyhound
+- n02091134 whippet
+- n02091244 Ibizan hound, Ibizan Podenco
+- n02091467 Norwegian elkhound, elkhound
+- n02091635 otterhound, otter hound
+- n02091831 Saluki, gazelle hound
+- n02092002 Scottish deerhound, deerhound
+- n02092339 Weimaraner
+- n02093256 Staffordshire bullterrier, Staffordshire bull terrier
+- n02093428 American Staffordshire terrier, Staffordshire terrier, American pit bull terrier, pit bull terrier
+- n02093647 Bedlington terrier
+- n02093754 Border terrier
