@@ -13,6 +13,95 @@ def load_sample(path):
     return image_tensor
 
 
+file_list = os.listdir(os.path.join(os.getcwd(), "filtered_data"))
+
+mammal_files = []
+for file in file_list:
+    if int(file[-6:-4]) in [
+        1,
+        2,
+        3,
+        4,
+        5,
+        41,
+        42,
+        43,
+        44,
+        45,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        81,
+        82,
+        83,
+        84,
+        85,
+    ]:
+        mammal_files.append(file)
+
+filtered_data_dir = "filtered_data"
+
+
+def get_paths(filtered_data_dir):
+    anchor_paths = []
+    positive_paths = []
+    negative_paths = []
+    labels = []
+    for file in mammal_files:
+        label_1 = int(file[-6:-4])
+
+        idx_2 = np.random.randint(0, len(mammal_files))
+        second_file = mammal_files[idx_2]
+        label_2 = int(second_file[-6:-4])
+
+        if label_1 == label_2:
+            anchor_paths.append(os.path.join(os.getcwd(), filtered_data_dir, file))
+            positive_paths.append(
+                os.path.join(os.getcwd(), filtered_data_dir, second_file)
+            )
+            random_idx = np.random.randint(0, len(mammal_files))
+
+            third_file = mammal_files[random_idx]
+            label_3 = int(third_file[-6:-4])
+            while label_3 == label_1:
+                random_idx = np.random.randint(0, len(mammal_files))
+                third_file = mammal_files[random_idx]
+                label_3 = int(third_file[-6:-4])
+
+            negative_paths.append(
+                os.path.join(os.getcwd(), filtered_data_dir, third_file)
+            )
+
+            labels.append(label_1)
+        else:
+            anchor_paths.append(os.path.join(os.getcwd(), filtered_data_dir, file))
+            negative_paths.append(
+                os.path.join(os.getcwd(), filtered_data_dir, second_file)
+            )
+            random_idx = np.random.randint(0, len(mammal_files))
+
+            third_file = mammal_files[random_idx]
+            label_3 = int(third_file[-6:-4])
+            while label_3 != label_1:
+                random_idx = np.random.randint(0, len(mammal_files))
+                third_file = mammal_files[random_idx]
+                label_3 = int(third_file[-6:-4])
+
+            positive_paths.append(
+                os.path.join(os.getcwd(), filtered_data_dir, third_file)
+            )
+
+            labels.append(label_1)
+    return anchor_paths, positive_paths, negative_paths, labels, mammal_files
+
+
 class TrainingDataset(Dataset):
     def __init__(self, anchor_paths, positive_paths, negative_paths):
         self.anchor_paths = anchor_paths
@@ -63,9 +152,10 @@ class TestingDataset(Dataset):
         return sample, label
 
 
-anchor_paths = []
-positive_paths = []
-negative_paths = []
+anchor_paths, positive_paths, negative_paths, labels, mammal_files = get_paths(
+    filtered_data_dir
+)
+
 pretrained_data = []
 
 training_dataset = TrainingDataset(anchor_paths, positive_paths, negative_paths)
