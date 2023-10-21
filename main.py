@@ -1,9 +1,9 @@
 import torch as torch
 from torchvision.models import mobilenet_v3_small
 import numpy as np
+import matplotlib.pyplot as plt
 
 
-# import 2 dataloader modules here one for training, validating and the second for testing
 training_dataloader=Dataloader(...)
 #training dataset should only have anchor, positive, negative
 validation_dataloader=Dataloader(...)
@@ -19,9 +19,7 @@ for name, param in model.named_parameters():
         param.requires_grad = False
 
 def train_one_epoch():
-    running_loss = 0.
-    last_loss = 0.
-    
+    running_loss = 0.   
     for i, data in enumerate(training_dataloader):
         anchor, positive, negative = data
         optimizer.zero_grad()
@@ -31,13 +29,10 @@ def train_one_epoch():
         loss = loss_function(anchor_output, positive_output, negative_output)
         loss.backward()
         optimizer.step()
-
         running_loss += loss.item()
-        if i % 1000 == 999:
-            last_loss = running_loss / 1000 
-            print(f'batch {i+1} loss: {last_loss}')
-    
-    return last_loss
+    average_loss = running_loss / i+1
+
+    return average_loss
 
 def validate_one_epoch():
     accuracy=0
@@ -52,39 +47,55 @@ def validate_one_epoch():
                 best = current_difference 
                 output_label= y_pretrained_val
         accuracy += (output_label==y_val)
-    accuracy /= i 
+    accuracy /= i+1
     return accuracy
 
 # train and validation loop
 loss_function = torch.nn.TripletMarginLoss()
 optimizer = torch.optim.Adam(model.parameters())
 EPOCHS = 10
-
+losses=[]
+accuracies=[]
 for epoch in range(EPOCHS):
-    print(f'EPOCH : {epoch + 1}')
+    print(f'')
     model.train()
     avg_loss = train_one_epoch()
+    losses.append(avg_loss)
     model.eval()
     with torch.no_grad():
-        accuracy= validate_one_epoch()
-    print('LOSS train {} valid {}'.format(avg_loss))
-    
+        accuracy = validate_one_epoch()
+        accuracies.append(accuracy)
+    print(f'epoch {epoch+1}, train loss: {avg_loss:.2f}, validation accuracy: {accuracy:.2%}')
 
-# testing loop
-model.eval()
-with torch.no_grad():
-    accuracy=0
-    for i, tdata in enumerate(testing_dataloader):
-        tinput, tlabel = tdata 
-        toutput = model(tinput)
-        for i, tpretrained in enumerate(testing_pretraineddataloader):
-            tpretrainedinput, tpretrainedlabel = tpretrained
-            tpretrainedoutput = model(tpretrainedinput)
-            current_similarity= torch.nn.functional.cosine_similarity(toutput, tpretrainedoutput)
-            if current_similarity > best:
-                best= current_similarity
-                output_label= tpretrainedlabel
-        accuracy= accuracy+ (output_label==tlabel)
+plt.plot(accuracies, marker='o', linestyle='-')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.title('Accuracy Over Epochs')
+plt.show()
+plt.close()
 
-accuracy= accuracy/i 
-print(accuracy)
+plt.plot(losses, marker='o', linestyle='-')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.title('Accuracy Over Epochs')
+plt.show()
+plt.close()
+
+# # testing loop
+# model.eval()
+# with torch.no_grad():
+#     accuracy=0
+#     for i, tdata in enumerate(testing_dataloader):
+#         tinput, tlabel = tdata 
+#         toutput = model(tinput)
+#         for i, tpretrained in enumerate(testing_pretraineddataloader):
+#             tpretrainedinput, tpretrainedlabel = tpretrained
+#             tpretrainedoutput = model(tpretrainedinput)
+#             current_similarity= torch.nn.functional.cosine_similarity(toutput, tpretrainedoutput)
+#             if current_similarity > best:
+#                 best= current_similarity
+#                 output_label= tpretrainedlabel
+#         accuracy = accuracy+ (output_label==tlabel)
+
+# accuracy= accuracy/i 
+# print(accuracy)
